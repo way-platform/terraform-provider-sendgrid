@@ -1,0 +1,15 @@
+overlay: 1.0.0
+info:
+  title: SendGrid Templates — overlay
+  version: 1.0.0
+actions:
+  # Remove response definitions (we handle HTTP ourselves)
+  - target: $.components.responses
+    remove: true
+  # Remove uuid format on IDs to avoid openapi_types.UUID dependency
+  - target: $.components.schemas.TransactionalTemplate.properties.id.format
+    remove: true
+  - target: $.components.schemas.TransactionalTemplateVersionOutput.properties.id.format
+    remove: true
+  - target: $.components.schemas.TransactionalTemplatesVersionOutputLean.properties.id.format
+    remove: true

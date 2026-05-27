@@ -1,0 +1,34 @@
+version: "2"
+
+linters:
+  enable:
+    - gomodguard_v2
+
+  settings:
+    gomodguard_v2:
+      blocked:
+        - module: github.com/stretchr/testify
+          reason: "use stdlib testing + github.com/google/go-cmp/cmp"
+    errcheck:
+      exclude-functions:
+        - (net/http.ResponseWriter).Write
+        - (*encoding/json.Encoder).Encode
+        - (*encoding/json.Decoder).Decode
+        - (io.Closer).Close
+
+formatters:
+  enable:
+    - gci
+    - gofumpt
+    - goimports
+    - golines
+
+  settings:
+    golines:
+      max-len: 120
+
+exclusions:
+  rules:
+    - path: _test\.go$
+      linters:
+        - errcheck
