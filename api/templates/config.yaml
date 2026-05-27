@@ -1,0 +1,8 @@
+package: templates
+output: templates.gen.go
+generate:
+  models: true
+  embedded-spec: false
+output-options:
+  skip-prune: true
+  name-normalizer: ToCamelCaseWithInitialisms

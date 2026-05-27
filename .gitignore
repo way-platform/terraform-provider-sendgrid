@@ -1,0 +1,3 @@
+# Intermediate codegen artifacts (regenerated via go generate)
+api/*/02-*.json
+api/*/03-*.json
