@@ -14,6 +14,8 @@ jobs:
         with:
           fetch-depth: 0
       - uses: jdx/mise-action@v2
+      - name: Import GPG key
+        run: echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
       - run: mise run build
       - uses: go-semantic-release/action@v1
         with:
