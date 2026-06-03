@@ -99,7 +99,11 @@ func TestAccImage(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("sendgrid_image.test", "id", "img-001"),
 					resource.TestCheckResourceAttr("sendgrid_image.test", "name", "logo.png"),
-					resource.TestCheckResourceAttr("sendgrid_image.test", "url", "https://cdn.sendgrid.example/img-001.png"),
+					resource.TestCheckResourceAttr(
+						"sendgrid_image.test",
+						"url",
+						"https://cdn.sendgrid.example/img-001.png",
+					),
 					resource.TestCheckResourceAttr("sendgrid_image.test", "width", "1"),
 					resource.TestCheckResourceAttr("sendgrid_image.test", "height", "1"),
 				),
