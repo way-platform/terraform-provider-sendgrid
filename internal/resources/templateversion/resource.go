@@ -134,8 +134,14 @@ func (r *templateVersionResource) Create(
 		return
 	}
 
-	plan.ID = types.StringValue(*(tv.ID))
-	plan.UpdatedAt = types.StringValue(*(tv.UpdatedAt))
+	if tv.ID == nil {
+		resp.Diagnostics.AddError("invalid response", "template version ID is missing from API response")
+		return
+	}
+	plan.ID = types.StringValue(*tv.ID)
+	if tv.UpdatedAt != nil {
+		plan.UpdatedAt = types.StringValue(*tv.UpdatedAt)
+	}
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
@@ -158,9 +164,15 @@ func (r *templateVersionResource) Read(ctx context.Context, req resource.ReadReq
 
 	state.Name = types.StringValue(tv.Name)
 	state.Subject = types.StringValue(tv.Subject)
-	state.HTML = types.StringValue(*(tv.HTMLContent))
-	state.Active = types.Int64Value(int64(*(tv.Active)))
-	state.UpdatedAt = types.StringValue(*(tv.UpdatedAt))
+	if tv.HTMLContent != nil {
+		state.HTML = types.StringValue(*tv.HTMLContent)
+	}
+	if tv.Active != nil {
+		state.Active = types.Int64Value(int64(*tv.Active))
+	}
+	if tv.UpdatedAt != nil {
+		state.UpdatedAt = types.StringValue(*tv.UpdatedAt)
+	}
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 
@@ -203,14 +215,24 @@ func (r *templateVersionResource) ImportState(
 		return
 	}
 
+	if tv.ID == nil {
+		resp.Diagnostics.AddError("invalid response", "template version ID is missing from API response")
+		return
+	}
 	state := templateVersionResourceModel{
-		ID:         types.StringValue(*(tv.ID)),
+		ID:         types.StringValue(*tv.ID),
 		TemplateID: types.StringValue(templateID),
 		Name:       types.StringValue(tv.Name),
 		Subject:    types.StringValue(tv.Subject),
-		HTML:       types.StringValue(*(tv.HTMLContent)),
-		Active:     types.Int64Value(int64(*(tv.Active))),
-		UpdatedAt:  types.StringValue(*(tv.UpdatedAt)),
+	}
+	if tv.HTMLContent != nil {
+		state.HTML = types.StringValue(*tv.HTMLContent)
+	}
+	if tv.Active != nil {
+		state.Active = types.Int64Value(int64(*tv.Active))
+	}
+	if tv.UpdatedAt != nil {
+		state.UpdatedAt = types.StringValue(*tv.UpdatedAt)
 	}
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
