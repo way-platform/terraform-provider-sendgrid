@@ -141,6 +141,8 @@ func (r *templateVersionResource) Create(
 	plan.ID = types.StringValue(*tv.ID)
 	if tv.UpdatedAt != nil {
 		plan.UpdatedAt = types.StringValue(*tv.UpdatedAt)
+	} else {
+		plan.UpdatedAt = types.StringNull()
 	}
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
