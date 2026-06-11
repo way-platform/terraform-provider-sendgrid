@@ -33,9 +33,14 @@ func WithHTTPClient(hc *http.Client) Option {
 // New creates a SendGrid API client.
 func New(apiKey string, opts ...Option) *Client {
 	c := &Client{
-		apiKey:     apiKey,
-		baseURL:    "https://api.sendgrid.com",
-		httpClient: http.DefaultClient,
+		apiKey:  apiKey,
+		baseURL: "https://api.sendgrid.com",
+		httpClient: &http.Client{
+			Transport: &retryTransport{
+				maxRetries: 3,
+				next:       http.DefaultTransport,
+			},
+		},
 	}
 	for _, o := range opts {
 		o(c)
