@@ -3,12 +3,21 @@ version: "2"
 linters:
   enable:
     - gomodguard_v2
+    - gosec
 
   settings:
     gomodguard_v2:
       blocked:
         - module: github.com/stretchr/testify
           reason: "use stdlib testing + github.com/google/go-cmp/cmp"
+    gosec:
+      excludes:
+        # G104 (unhandled errors) duplicates errcheck, which already governs
+        # this and is excluded in _test.go below. errcheck still enforces it
+        # in non-test code, so no production coverage is lost. A path-scoped
+        # exclusion does not work here: gosec reports absolute paths that the
+        # exclusion regex fails to match, so the rule must be dropped globally.
+        - G104
     errcheck:
       exclude-functions:
         - (net/http.ResponseWriter).Write

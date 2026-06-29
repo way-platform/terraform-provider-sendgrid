@@ -12,7 +12,8 @@ import (
 
 // UploadImage uploads an image file to SendGrid.
 func (c *Client) UploadImage(ctx context.Context, filePath string) (*Image, error) {
-	f, err := os.Open(filePath)
+	// G304: uploading a caller-supplied local image path is the point.
+	f, err := os.Open(filePath) //nolint:gosec
 	if err != nil {
 		return nil, fmt.Errorf("opening file: %w", err)
 	}
@@ -36,7 +37,7 @@ func (c *Client) UploadImage(ctx context.Context, filePath string) (*Image, erro
 
 	resp, err := c.do(ctx, "POST", "/v3/images", pr, writer.FormDataContentType())
 	if err != nil {
-		pr.Close() //nolint:errcheck // unblock goroutine on request failure
+		pr.Close() //nolint:errcheck,gosec // G104: best-effort close to unblock goroutine on request failure
 		return nil, err
 	}
 	defer resp.Body.Close()
