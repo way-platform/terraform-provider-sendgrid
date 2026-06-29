@@ -9,5 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Full history so commitlint can range over the PR's commits.
+          fetch-depth: 0
       - uses: jdx/mise-action@v2
       - run: mise run build

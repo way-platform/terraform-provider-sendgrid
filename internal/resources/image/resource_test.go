@@ -32,7 +32,7 @@ func TestAccImage(t *testing.T) {
 		0x00, 0x01, 0xe5, 0x27, 0xde, 0xfc, 0x00, 0x00, 0x00, 0x00, 0x49, 0x45,
 		0x4e, 0x44, 0xae, 0x42, 0x60, 0x82,
 	}
-	if err := os.WriteFile(imgPath, png1x1, 0o644); err != nil {
+	if err := os.WriteFile(imgPath, png1x1, 0o600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -46,6 +46,7 @@ func TestAccImage(t *testing.T) {
 		switch {
 		case r.Method == http.MethodPost && r.URL.Path == "/v3/images":
 			// Parse multipart to validate the upload field exists.
+			//nolint:gosec // G120: bounded 10MB limit in a test stub handler
 			if err := r.ParseMultipartForm(10 << 20); err != nil {
 				w.WriteHeader(http.StatusBadRequest)
 				json.NewEncoder(w).Encode(map[string]any{

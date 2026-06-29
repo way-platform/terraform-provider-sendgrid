@@ -7,10 +7,26 @@ terraform = "1.12"
 "go:github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen" = "2.5.0"
 "go:github.com/speakeasy-api/openapi-overlay" = "0.10.3"
 "npm:@apiture/openapi-down-convert" = "0.14.1"
+"npm:@commitlint/cli" = "21"
 
 [tasks.build]
 description = "Full CI pipeline"
-depends = ["download", "generate", "lint", "test", "tidy", "diff"]
+depends = ["lint:commits", "download", "generate", "lint", "test", "tidy", "diff"]
+
+[tasks."lint:commits"]
+description = "lint commit messages (conventional commits)"
+run = """
+#!/usr/bin/env bash
+set -euo pipefail
+if [ -n "${GITHUB_BASE_REF:-}" ]; then
+  git fetch origin "$GITHUB_BASE_REF" 2>/dev/null || true
+  commitlint --from "origin/$GITHUB_BASE_REF" --to HEAD
+elif [ -n "$(git tag -l)" ]; then
+  commitlint --from "$(git describe --tags --abbrev=0)" --to HEAD
+else
+  commitlint --last
+fi
+"""
 
 [tasks.download]
 description = "download Go dependencies"
